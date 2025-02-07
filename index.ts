@@ -1,3 +1,7 @@
+import { ApolloServer } from "@apollo/server";
+import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
+import { startStandaloneServer } from "@apollo/server/standalone";
+
 const books = [
   {
     title: "Titulo libro 1",
@@ -18,3 +22,20 @@ const typeDefs = `
         books:[Book]
     }
 `;
+
+const resolvers = {
+  Query: {
+    books: () => books,
+  },
+};
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
+});
+
+console.log(`Server ready at: ${url}`);
